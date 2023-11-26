@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <cmath>
 #include <vector>
 
@@ -32,6 +32,9 @@ class BuddyAllocator
 BuddyAllocator::BuddyAllocator(int totalSize) : totalSize(totalSize)
 {
     levels = static_cast<int>(std::log2(totalSize) + 1); // Sospecho que esta línea puede traerme ciertos problemas en el caso: el logaritmo sale entero
+    printf("\n\ntotalSize = %d\n", totalSize);
+    printf("El logaritmo antes de castearlo a entero = %.4f\n", (std::log2(totalSize) + 1));
+    printf("levels = %d\n\n", levels);
     memory.resize(levels);
 
     for (int i = 0; i < levels; ++i)
@@ -162,6 +165,38 @@ int main()
 
     // Display the state of the memory after deallocation
     allocator.display();
+
+    return 0;
+}*/
+
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+
+int main() {
+    char key;
+
+    for (;;) {
+        // Tu código dentro del ciclo aquí
+        std::cout << "Hola Mundo" << std::endl;
+
+        // Verificar si una tecla está presionada
+        if (_kbhit()) {
+            // Obtener la tecla presionada
+            key = _getch();
+
+            // Verificar si la tecla es 'A'
+            if (key == 'A' || key == 'a') {
+                std::cout << "La tecla 'A' fue presionada." << std::endl;
+                //break;  // Puedes salir del bucle si se presiona 'A'
+                key = '0';
+            }
+        }
+
+        // Agregar un pequeño retraso para no consumir demasiado CPU
+        // Puedes ajustar el valor según sea necesario
+        Sleep(100);
+    }
 
     return 0;
 }

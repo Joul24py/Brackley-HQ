@@ -44,6 +44,10 @@ int main()
     FragmentMemory(p->leftSon->rightSon);
     PrintMemory(p);
 
+    printf("\nDESFRAGMENTACION\n");
+    DefragmentMemory(p->leftSon->rightSon);
+    PrintMemory(p);
+
     getchar();
     return 0;
 }
@@ -98,4 +102,13 @@ void FragmentMemory(treeElement element)
 
     element->leftSon = left;
     element->rightSon = right;
+}
+
+void DefragmentMemory(treeElement element) // The defragmentation process is done using the common father as the element in the arguments
+{
+    delete element->rightSon;
+    delete element->leftSon;
+
+    element->leftSon = NULL;
+    element->rightSon = NULL;
 }

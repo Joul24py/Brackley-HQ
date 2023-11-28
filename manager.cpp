@@ -27,10 +27,12 @@ void InitializeMemory();
 void PrintMemory(treeElement element);
 void FragmentMemory(treeElement element);
 void DefragmentMemory(treeElement element);
+void MemoryInput(treeElement element, int id, int memory, int quantum);
 
 // Main function
 int main()
 {
+    // Variables and parameters used in random process generation
     int processProbability = 40;
     int processGenerator, processId = 0, memoryLimit = 1000, memoryGenerator, quantumLimit = 20, quantumGenerator, quantumSystem = 3;
     
@@ -42,18 +44,22 @@ int main()
         if(processGenerator <= processProbability)
         {
             processId++;
-            memoryGenerator = rand() % memoryLimit;
+            //memoryGenerator = rand() % memoryLimit;
             quantumGenerator = rand() % quantumLimit;
             printf("Generado proceso (%d)\n", processGenerator);
             printf("Id: %d\n", processId);
+            scanf("%d", &memoryGenerator);
             printf("Memoria: %d\n", memoryGenerator);
             printf("Cuanto: %d\n\n", quantumGenerator);
+
+            MemoryInput(p, processId, memoryGenerator, quantumGenerator);
+            PrintMemory(p);
+            getchar();
         }
         Sleep(1000);
     }
-
-
     
+    // Testing the memory functionalities
     InitializeMemory();
     PrintMemory(p);
 
@@ -136,4 +142,47 @@ void DefragmentMemory(treeElement element) // The defragmentation process is don
 
     element->leftSon = NULL;
     element->rightSon = NULL;
+}
+
+void MemoryInput(treeElement element, int id, int memory, int quantum)
+{
+    treeElement a;
+	a = element;
+
+    printf("a\n");
+	
+    if(a->leftSon != NULL)
+    {
+        printf("b\n");
+        MemoryInput(a->leftSon, id, memory, quantum);
+        printf("c\n");
+        MemoryInput(a->rightSon, id, memory, quantum);
+        printf("d\n");
+    }
+    else
+    {
+        printf("e\n");
+        printf("%p <- {This: %p [%d, %d, %d]} -> Left: %p Right: %p\n",a->father, a, a->processId, a->freeMemory, a->quantumProcess, a->leftSon, a->rightSon);
+        if(memory > a->freeMemory)
+        {
+            printf("f\n");
+            return;
+        }
+        else
+        {
+            printf("g\n");
+            if(memory > ((a->freeMemory) / 2))
+            {
+                printf("h\n");
+                a->processId = id;
+                a->freeMemory = memory;
+                a->quantumProcess = quantum;
+            }
+            else
+            {
+                printf("i\n");
+                FragmentMemory(a);
+            }
+        }
+    }
 }

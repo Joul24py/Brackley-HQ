@@ -74,11 +74,11 @@ void AddProcess(int id, int memory, int quantum)
     {
         // Adding the first element of the stack
         p = new(struct nodeQueue);
-        p->previous = NULL;
+        p->previous = p;
         p->processId = id;
         p->freeMemory = memory;
         p->quantumProcess = quantum;
-        p->next = NULL;
+        p->next = p;
         q = p;
         r = p;
     }
@@ -90,9 +90,10 @@ void AddProcess(int id, int memory, int quantum)
         r->processId = id;
         r->freeMemory = memory;
         r->quantumProcess = quantum;
-        r->next = NULL;
+        r->next = p;
         q->next = r;
         q = r;
+        p->previous = r;
     }
 }
 
@@ -110,6 +111,7 @@ void PrintQueue()
         {
             printf("%p <- %p: [%d  %d  %d] -> %p\n", a->previous, a, a->processId, a->freeMemory, a->quantumProcess, a->next);
             a = a->next;
-        } while (a);
+        }
+        while (a != p);
     }
 }

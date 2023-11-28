@@ -18,12 +18,14 @@ struct nodeQueue
 typedef struct nodeQueue *queueElement;
 
 queueElement p = NULL; // Variable that stores the beginning of the queue (or null of there's no values)
-queueElement q;
-queueElement r;
+queueElement q; // Variable that helps linking the one before the last node with the last node
+queueElement r; // Variable that stores the end of the queue
+queueElement s; // Variable that stores the position of the system quantum (on which is going to decrement the process quantum)
 
 // Defining process manager functions
 void AddProcess(int id, int memory, int quantum);
 void PrintQueue();
+void Advance(int quantumSystem);
 
 
 // Main function
@@ -48,22 +50,24 @@ int main()
     
     while(1)
     {
+        Advance(quantumSystem);
+
         processGenerator = rand() % 100;
         if(processGenerator <= processProbability)
         {
             processId++;
-            memoryGenerator = rand() % memoryLimit;
-            quantumGenerator = rand() % quantumLimit;
+            memoryGenerator = rand() % memoryLimit + 1;
+            quantumGenerator = rand() % quantumLimit + 1;
             //printf("Generado proceso (%d)\n", processGenerator);
             //printf("Id: %d\n", processId);
             //printf("Memoria: %d\n", memoryGenerator);
             //printf("Cuanto: %d\n\n", quantumGenerator);
 
             AddProcess(processId, memoryGenerator, quantumGenerator);
-            system("CLS");
-            PrintQueue();
         }
-        Sleep(1000);
+        system("CLS");
+        PrintQueue();
+        Sleep(1500);
     }
 }
 
@@ -113,5 +117,66 @@ void PrintQueue()
             a = a->next;
         }
         while (a != p);
+    }
+}
+
+void Advance(int quantumSystem)
+{
+    if(p == NULL)
+    {
+        printf("Empty list\n");
+        s = NULL;
+    }
+    else
+    {
+        if(s == NULL)
+        {
+            s = p;
+        }
+
+        //printf("Evaluando %p <- %p: [%d  %d  %d] -> %p\n", s->previous, s, s->processId, s->freeMemory, s->quantumProcess, s->next);
+        s->quantumProcess = s->quantumProcess - quantumSystem;
+        //printf("Evaluado %p <- %p: [%d  %d  %d] -> %p\n", s->previous, s, s->processId, s->freeMemory, s->quantumProcess, s->next);
+        //getchar();
+        if (s->quantumProcess <= 0)
+        {
+            // Entering here means this process is done. So here it's deleted from the structure
+            if(s->next == s) // Case 1: When it's just one element
+            {
+                delete s;
+                s = NULL;
+                p = NULL;
+            }
+            else // Case 2: When the structure has more than one element
+            {
+                queueElement a = s; // Auxiliar for deleting elements
+                queueElement sBefore = s->previous;
+                queueElement sAfter = s->next;
+
+                sBefore->next = sAfter;
+                sAfter->previous = sBefore;
+                s = s->next;
+
+                if(p == a)
+                {
+                    p = p->next;
+                }
+
+                if(r == a)
+                {
+                    r = r->previous;
+                    q = r;
+                }
+
+                delete a;
+            }
+        }
+        else
+        {
+            if(s != NULL)
+            {
+                s = s->next;
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <time.h>
+#include <windows.h>
 
 // General definitions for the memory manager structure functions
 struct nodeTree
@@ -29,6 +31,29 @@ void DefragmentMemory(treeElement element);
 // Main function
 int main()
 {
+    int processProbability = 40;
+    int processGenerator, processId = 0, memoryLimit = 1000, memoryGenerator, quantumLimit = 20, quantumGenerator, quantumSystem = 3;
+    
+    srand(time(NULL));
+    
+    while(1)
+    {
+        processGenerator = rand() % 100;
+        if(processGenerator <= processProbability)
+        {
+            processId++;
+            memoryGenerator = rand() % memoryLimit;
+            quantumGenerator = rand() % quantumLimit;
+            printf("Generado proceso (%d)\n", processGenerator);
+            printf("Id: %d\n", processId);
+            printf("Memoria: %d\n", memoryGenerator);
+            printf("Cuanto: %d\n\n", quantumGenerator);
+        }
+        Sleep(1000);
+    }
+
+
+    
     InitializeMemory();
     PrintMemory(p);
 
